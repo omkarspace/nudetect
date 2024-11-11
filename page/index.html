@@ -1,0 +1,300 @@
+<!-- <!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Adult Content Detector</title>
+    <style>
+        .body {
+            background: black;
+            display: flex;
+            justify-content: center;
+            margin: 10rem 10rem 5rem 5rem;
+        }
+
+        .height-box {
+            min-height: 30rem;
+        }
+
+        .hover:hover {
+            filter: contrast(400%);
+        }
+    </style>
+</head>
+<body class="body m-5 d-flex flex-column">
+<div class="d-flex text-white mh-100 w-100 justify-content-between">
+    <div class="container d-flex flex-column flex-grow-1">
+        <span>Input Video</span>
+        <div class="container d-flex flex-column justify-content-start align-items-center height-box rounded mt-3 bg-dark p-5">
+            <div class="bg-warning container rounded-3 p-3 mb-5 d-flex flex-column">
+                <span>Test with: https://www.youtube.com/watch?v=eAR2V7PZiIQ</span>
+                <span>Test with: https://www.youtube.com/watch?v=pZs4SYfU6pA</span>
+                <span>Test with: https://www.youtube.com/watch?v=bXlQ3Mw4uGc(Short safe video)</span>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex gap-2">
+                    <label for="video">Upload a video:</label>
+                    <input class="w-100" id="video" type="file">
+                </div>
+                <span class="my-2 w-100 text-center text-danger">or</span>
+                <div class="d-flex gap-2">
+                    <label for="link">Enter a youtube url:</label>
+                    <input class="w-100 h-100" id="link" type="text">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container flex-grow-1 d-flex flex-column">
+        <span>Output Video</span>
+        <div class="container d-flex justify-content-center align-items-center height-box rounded mt-3 bg-dark p-5">
+            <video class="mw-100 bg-gradient p-xl-5 rounded-3" controls id="output" src=""></video>
+        </div>
+    </div>
+</div>
+<div class="d-flex mx-2 my-3 justify-content-end">
+    <button class="btn bg-primary text-white px-5 py-2 hover" id="submit">
+        Start
+    </button>
+</div>
+<script>
+    url = 'http://localhost:8080/'
+    video = document.getElementById('video');
+    output = document.getElementById('output');
+    link = document.getElementById('link');
+    submit_btn = document.getElementById('submit');
+    submit_btn.onclick = async () => {
+        console.log("pressed")
+        if (video.files[0]) {
+            const file = video.files[0]
+            console.log(file)
+            const data = new FormData()
+            data.append("video", file)
+            await fetch(url + 'from-video', {
+                    method: 'POST',
+                    body: data
+                }
+            ).then(res => res.text()).then(obj => {
+                console.log(obj);
+                output.src = obj;
+                output.play();
+            });
+        } else if (link.value.length > 0) {
+            console.log(link.innerText);
+            const data = {
+                url: link.value
+            }
+            await fetch(url + 'from-yt', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(res => res.text())
+                .then(obj => {
+                    console.log(obj);
+                    output.src = obj;
+                    output.play();
+                });
+        } else console.log("No file uploaded and no link found.")
+    }
+</script>
+</body>
+</html> -->
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" rel="stylesheet">
+    <title>Adult Content Detector</title>
+    <style>
+        body {
+            background: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .input-container,
+        .output-container {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        button {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 10px 20px rgba(255, 123, 95, 0.3);
+        }
+
+        button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+        }
+
+        input {
+            background-color: #2c2c2c;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff7e5f;
+        }
+
+        #loading {
+            display: block;
+            margin: 1rem auto;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .instructions a:hover {
+            text-decoration: underline;
+        }
+
+        #error-message {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center min-vh-100">
+            <div class="col-md-6">
+                <div class="input-container bg-dark p-5 rounded">
+                    <h2 class="text-white">Upload Video or Enter YouTube URL</h2>
+                    <div class="instructions text-warning mb-4">
+                        <p>Test with:</p>
+                        <ul>
+                            <li><a href="https://www.youtube.com/watch?v=eAR2V7PZiIQ" target="_blank">Sample 1</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=pZs4SYfU6pA" target="_blank">Sample 2</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=bXlQ3Mw4uGc" target="_blank">Sample 3</a></li>
+                        </ul>
+                    </div>
+                    <form id="form">
+                        <div class="mb-4">
+                            <input type="file" id="video" class="form-control" accept="video/*">
+                        </div>
+                        <div class="text-center text-danger mb-3">OR</div>
+                        <div class="mb-4">
+                            <input type="text" id="link" class="form-control" placeholder="Enter YouTube URL">
+                        </div>
+                        <div id="error-message" class="alert alert-danger d-none" role="alert"></div>
+                        <button type="button" id="submit" class="btn btn-primary w-100">Start Detection</button>
+                    </form>
+                    <div id="loading" class="spinner-border text-primary d-none" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="text-center text-white">Output Video</h2>
+                <div class="output-container bg-dark p-3 rounded">
+                    <video id="output" class="w-100" controls></video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const url = 'http://localhost:8080/';
+        const videoInput = document.getElementById('video');
+        const linkInput = document.getElementById('link');
+        const submitButton = document.getElementById('submit');
+        const outputVideo = document.getElementById('output');
+        const loadingSpinner = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+
+        submitButton.onclick = async () => {
+            errorMessage.classList.add('d-none');
+            loadingSpinner.classList.remove('d-none');
+            submitButton.disabled = true;
+
+            const file = videoInput.files[0];
+            const link = linkInput.value;
+
+            if (!file && !link) {
+                showError('Please upload a video or enter a YouTube URL.');
+                return;
+            }
+
+            try {
+                let response;
+                if (file) {
+                    const formData = new FormData();
+                    formData.append("video", file);
+                    response = await fetch(url + 'from-video', { method: 'POST', body: formData });
+                } else if (link) {
+                    const data = { url: link };
+                    response = await fetch(url + 'from-yt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                    });
+                }
+
+                const videoUrl = await response.text();
+                if (videoUrl) {
+                    outputVideo.src = videoUrl;
+                    outputVideo.play();
+                } else {
+                    showError('No video returned from the server.');
+                }
+            } catch (error) {
+                showError('An error occurred while processing the video.');
+            } finally {
+                loadingSpinner.classList.add('d-none');
+                submitButton.disabled = false;
+            }
+        };
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('d-none');
+        }
+    </script>
+</body>
+
+</html>
