@@ -1,8 +1,5 @@
-```
 
-
-```markdown
-# Adult Content Detector
+# nudetech (Adult Content Detector)
 
 A web-based application that detects adult content in videos using AI and machine learning. The system can process both direct video uploads and YouTube URLs.
 
