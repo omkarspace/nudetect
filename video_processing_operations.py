@@ -30,3 +30,17 @@ def frames_to_video(input_dir, fps, output_dir):
     print(images)
     clip = ImageSequenceClip.ImageSequenceClip(images, fps)
     clip.write_videofile(output_dir + "video.mp4", fps=fps)
+
+# def frames_to_video(input_dir, fps, output_dir):
+#     try:
+#         images = sort_frames(input_dir)
+#         if not images:
+#             raise ValueError("No images found in directory")
+        
+#         clip = ImageSequenceClip.ImageSequenceClip(images, fps)
+#         output_path = os.path.join(output_dir, "video.mp4")
+#         clip.write_videofile(output_path, fps=fps)
+#         return output_path
+#     except Exception as e:
+#         logging.error(f"Error in video processing: {str(e)}")
+#         raise
